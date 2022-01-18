@@ -39,7 +39,9 @@ def handle_request(client_socket, client_addr):
     google_response = get_google_response(client_request)
 
     client_socket.sendall(google_response)
+    client_socket.shutdown(socket.SHUT_WR)
     client_socket.close()
+    print(f'Closed connection from {client_host}:{client_port}')
 
 
 def main():
@@ -52,11 +54,11 @@ def main():
 
         while True:
             client_socket, client_addr = server_socket.accept()
-            # handle_request(client_socket, client_addr)
             p = Process(target=handle_request, args=(
                 client_socket, client_addr,))
             p.daemon = True
             p.start()
+            print(f'Started process ID {p.pid}')
 
 
 if __name__ == "__main__":
