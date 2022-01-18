@@ -22,19 +22,23 @@ def send_data(serversocket, payload):
 
 def main():
     try:
-        proxy_server_host = 'localhost'
-        proxy_server_port = 8000
+        PROXY_SERVER_HOST = 'localhost'
+        PROXY_SERVER_PORT = 8000
 
-        target_host = 'google.com'
+        split_payload = [
+            'GET / HTTP/1.0',
+            'Host: google.com',
+            '\r\n'
+        ]
 
-        payload = f'GET / HTTP/1.0\r\nHost: {target_host}\r\n\r\n'
-        buffer_size = 4096
+        payload = '\r\n'.join(split_payload)
+        buffer_size = 1024
 
         server_socket = create_tcp_socket()
 
-        server_socket.connect((proxy_server_host, proxy_server_port))
-        print(f'Socket Connected to {proxy_server_host}:{proxy_server_port}')
+        server_socket.connect((PROXY_SERVER_HOST, PROXY_SERVER_PORT))
 
+        print(f'Sending request to {PROXY_SERVER_HOST}:{PROXY_SERVER_PORT}')
         send_data(server_socket, payload)
         server_socket.shutdown(socket.SHUT_WR)
 
